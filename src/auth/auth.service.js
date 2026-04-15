@@ -5,7 +5,7 @@ import pool from "../config/db.js";
 import bcrypt from "bcryptjs";
 
 //import the token generator
-import { generateToken } from "./jwt.js";
+import { generateToken } from "../config/jwt.js";
 
 // import AppError
 import AppError from "../middleware/AppError.js";
