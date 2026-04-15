@@ -45,7 +45,7 @@ export const login = async (req, res, next) => {
 export const getMe = async (req, res, next) => {
     try {
         // req.user is attached by the JWT middleware after verifying the token
-        const user = getMeService(req.user.id);
+        const user = await getMeService(req.user.id);
 
         //send response
         res.status(200).json({
