@@ -1,4 +1,4 @@
-import { verifyToken } from "../auth/jwt.js";
+import { verifyToken } from "../config/jwt.js";
 import AppError from "./AppError.js";
 import pool from "../config/db.js";
 
