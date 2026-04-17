@@ -4,6 +4,8 @@ import express from 'express';
 // import routes
 import authRoutes from './auth/auth.routes.js';
 import signalRoutes from './api/signals.routes.js'
+import decisionsRouter from './api/decisions.js';
+import alertsRouter from './api/alerts.js';
 
 // import centralized error handler
 import errorHandler from './middleware/errorHandler.js';
@@ -15,6 +17,8 @@ app.use(express.json());
 // mount routes
 app.use('/auth', authRoutes);
 app.use('/signals', signalRoutes);
+app.use('/decisions', decisionsRouter);
+app.use('/alerts', alertsRouter);
 
 // health check endpoint o confirm that the server is running
 app.get('/health', (req, res) => {
