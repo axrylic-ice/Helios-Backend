@@ -1,10 +1,9 @@
-// Coordinates everything: signal → resolve → format → save → alert
-
-import signalsService from './signalsService.js';
+import { getLatestSignalService } from './signals.service.js'; // ← updated import
 import resolveDecision from '../domain/decisionResolver.js';
 import formatImpact from '../domain/impactFormatter.js';
 import snapshotBuilder from './decisionSnapshotBuilder.js';
 import alertsService from './alertsService.js';
+import AppError from '../middleware/AppError.js'; // ← use AppError
 
 const severityMap = { BUY: 'info', HOLD: 'low', WAIT: 'high' };
 
@@ -15,9 +14,8 @@ const messageMap = (decision, fx_pair, confidence) => ({
 }[decision]);
 
 const analyzeDecision = async ({ user_id, fx_pair, amount, time_horizon_days }) => {
-    // 1. Fetch latest signal for the given FX pair
-    const signal = await signalsService.getLatestSignal(fx_pair);
-    if (!signal) throw new Error(`No signal found for fx_pair: ${fx_pair}`);
+    // 1. Fetch latest signal using teammate's real service
+    const signal = await getLatestSignalService(fx_pair); // ← throws AppError if not found
 
     // 2. Apply decision rules
     const decision = resolveDecision(signal);
@@ -25,7 +23,7 @@ const analyzeDecision = async ({ user_id, fx_pair, amount, time_horizon_days }) 
     // 3. Shape the result
     const result = formatImpact(signal, decision);
 
-    // 4. Persist the decision snapshot
+    // 4. Save the decision snapshot
     const saved = await snapshotBuilder.saveDecision({
         user_id,
         fx_pair,
@@ -35,7 +33,7 @@ const analyzeDecision = async ({ user_id, fx_pair, amount, time_horizon_days }) 
         result,
     });
 
-    // 5. Auto-generate an alert for this user
+    // 5. Auto-generate alert
     await alertsService.generateAlert({
         user_id,
         message: messageMap(decision, fx_pair, signal.confidence),

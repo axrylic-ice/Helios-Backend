@@ -1,14 +1,17 @@
 import express from 'express';
 import alertsService from '../services/alertsService.js';
+import protect from '../middleware/protect.js'; // ← add JWT guard
+import AppError from '../middleware/AppError.js';
 
 const router = express.Router();
 
-// GET /alerts?user_id=...
+// protect ALL alert routes
+router.use(protect);
+
+// GET /alerts  ← user_id comes from token, not query param anymore
 router.get('/', async (req, res, next) => {
     try {
-        const { user_id } = req.query;
-        if (!user_id) return res.status(400).json({ error: 'user_id query param is required' });
-
+        const user_id = req.user.id; // ← from protect middleware
         const alerts = await alertsService.getAlerts(user_id);
         res.status(200).json(alerts);
     } catch (err) {
@@ -19,11 +22,13 @@ router.get('/', async (req, res, next) => {
 // POST /alerts/read
 router.post('/read', async (req, res, next) => {
     try {
-        const { alert_id, user_id } = req.body;
-        if (!alert_id || !user_id) return res.status(400).json({ error: 'alert_id and user_id are required' });
+        const { alert_id } = req.body;
+        const user_id = req.user.id; // ← from protect middleware
+
+        if (!alert_id) return next(new AppError('alert_id is required', 400));
 
         const updated = await alertsService.markAsRead(alert_id, user_id);
-        if (!updated) return res.status(404).json({ error: 'Alert not found or already read' });
+        if (!updated) return next(new AppError('Alert not found', 404));
 
         res.status(200).json(updated);
     } catch (err) {
