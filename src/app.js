@@ -14,16 +14,18 @@ const app = express();
 
 app.use(express.json());
 
+// health check endpoint o confirm that the server is running
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'Helios API is running' });
+});
+
 // mount routes
 app.use('/auth', authRoutes);
 app.use('/signals', signalRoutes);
 app.use('/decisions', decisionsRouter);
 app.use('/alerts', alertsRouter);
 
-// health check endpoint o confirm that the server is running
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'Helios API is running' });
-});
+
 
 // centralized error handler
 app.use(errorHandler)
