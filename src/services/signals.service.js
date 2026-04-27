@@ -10,7 +10,7 @@ export const getLatestSignalService = async (fx_pair) => {
 
     // fetch the most recent signal for this FX pair
     const result = await pool.query(
-        `SELECT id, fx_pair, risk_score, volatility_level, confidence, summary, generated_at
+        `SELECT id, fx_pair, risk_score, volatility_level, confidence, summary, raw_data, generated_at
         FROM signals
         WHERE fx_pair = $1
         ORDER BY generated_at DESC

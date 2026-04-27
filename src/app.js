@@ -1,5 +1,6 @@
 // Import express
 import express from 'express';
+import cors from 'cors';
 
 // import routes
 import authRoutes from './auth/auth.routes.js';
@@ -11,6 +12,13 @@ import alertsRouter from './api/alerts.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
+
+// Only allow requests from the frontend URL
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.use(express.json());
 
