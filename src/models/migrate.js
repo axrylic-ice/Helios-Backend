@@ -28,8 +28,9 @@ const migrate = async () => {
             )
         `)
 
-        // create signals table
-        // Read only. Data pipeline writes here, backend only reads it
+        // Create signals table
+        // Stores precomputed intelligence from the data scientist's pipeline
+        // raw_data stores the full Bayse API response as JSONB
         await pool.query(`
             CREATE TABLE IF NOT EXISTS signals (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -38,6 +39,7 @@ const migrate = async () => {
                 volatility_level TEXT NOT NULL,
                 confidence FLOAT NOT NULL,
                 summary TEXT,
+                raw_data JSONB,
                 generated_at TIMESTAMP DEFAULT NOW()
             );
         `);
