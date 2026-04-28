@@ -14,11 +14,7 @@ import errorHandler from './middleware/errorHandler.js';
 const app = express();
 
 // Only allow requests from the frontend URL
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(cors());
 
 app.use(express.json());
 
@@ -32,8 +28,6 @@ app.use('/auth', authRoutes);
 app.use('/signals', signalRoutes);
 app.use('/decisions', decisionsRouter);
 app.use('/alerts', alertsRouter);
-
-
 
 // centralized error handler
 app.use(errorHandler)
