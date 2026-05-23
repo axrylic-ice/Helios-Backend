@@ -6,13 +6,12 @@ const formatImpact = (signal, decision) => {
   // Normalize news impact values to uppercase
   // Her model returns lowercase 'neutral', we need consistent casing
   const normalizeImpact = (impact) => {
-    if (!impact) return 'LOW';
+    if (!impact || typeof impact !== 'string') return 'LOW';
     const upper = impact.toUpperCase();
     if (upper === 'HIGH' || upper === 'MEDIUM' || upper === 'LOW') return upper;
     // Map neutral to LOW since it is not a strong signal
     return 'LOW';
   };
-
   // Normalize news items to handle description vs summary
   const normalizeNews = (newsArray) => {
     if (!newsArray || newsArray.length === 0) return [];
