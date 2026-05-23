@@ -3,7 +3,8 @@
 import axios from 'axios';
 import pool from '../config/db.js';
 
-const ML_ENGINE_URL = 'https://helios-ml-engine-183763913483.europe-west1.run.app/fx/decision';
+// const ML_ENGINE_URL = 'https://helios-ml-engine-183763913483.europe-west1.run.app/fx/decision';
+const ML_ENGINE_URL = ' https://helios-ml-engine-96277721190.europe-west1.run.app';
 
 export const syncMLSignal = async () => {
   try {
